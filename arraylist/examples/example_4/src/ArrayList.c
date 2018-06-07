@@ -70,7 +70,21 @@ ArrayList* al_newArrayList(void)
 int al_add(ArrayList* this, void* pElement)
 {
     int returnAux = -1;
-
+    if(this!=NULL && pElement!=NULL){
+        if(this->size<this->reservedSize){
+            returnAux=0;
+            returnAux=resizeUp(this);
+            this->pElements[this->size]=pElement;
+            this->size++;
+        }
+        else{
+            if(!resizeUp(this)){
+                returnAux=0;
+                this->pElements[this->size]=pElement;
+                this->size++;
+            }
+        }
+    }
     return returnAux;
 }
 
@@ -82,7 +96,10 @@ int al_add(ArrayList* this, void* pElement)
 int al_deleteArrayList(ArrayList* this)
 {
     int returnAux = -1;
-
+    if(this!=NULL){
+        free(this);
+        returnAux=0;
+    }
     return returnAux;
 }
 
@@ -94,7 +111,9 @@ int al_deleteArrayList(ArrayList* this)
 int al_len(ArrayList* this)
 {
     int returnAux = -1;
-
+    if(this!=NULL){
+        returnAux=this->size;
+    }
     return returnAux;
 }
 
@@ -108,7 +127,9 @@ int al_len(ArrayList* this)
 void* al_get(ArrayList* this, int index)
 {
     void* returnAux = NULL;
+    if(this!=NULL && index>=0){
 
+    }
     return returnAux;
 }
 
@@ -302,7 +323,15 @@ int al_sort(ArrayList* this, int (*pFunc)(void* ,void*), int order)
 int resizeUp(ArrayList* this)
 {
     int returnAux = -1;
-
+    void* aux;
+    if(this!=NULL){
+        aux=realloc(this->pElements, sizeof(void*)*(this->reservedSize+AL_INCREMENT));
+        if(aux!=NULL){
+            this->pElements=aux;
+            this->reservedSize+=AL_INCREMENT;
+            returnAux=0;
+        }
+    }
     return returnAux;
 
 }
